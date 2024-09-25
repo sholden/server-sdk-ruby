@@ -5,15 +5,41 @@ RSpec::Core::RakeTask.new(:spec)
 
 task default: %i[spec]
 
-desc "Generate protobuf stubs"
-task :proto do
+desc "Generate ffi protocol stubs"
+task :proto_ffi do
+  FFI_PROTOCOL="./client-sdk-rust/livekit-ffi/protocol"
+  FFI_OUT_RUBY="./lib/livekit/proto"
 
-  #protoc --proto_path=./protocol/protobufs --ruby_out=. --twirp_ruby_out=. ./protocol/protobufs/livekit_agent.proto
+  proto_files = %w{
+    audio_frame
+    ffi
+    handle
+    participant
+    room
+    track
+    video_frame
+    e2ee
+    stats
+  }.map { |f| "#{FFI_PROTOCOL}/#{f}.proto" }
 
+  cmd = [
+    "protoc",
+    "--proto_path=#{FFI_PROTOCOL}",
+    "--ruby_out=#{API_OUT_RUBY}",
+    "--twirp_ruby_out=#{API_OUT_RUBY}",
+    "-Iprotocol",
+    *proto_files
+  ]
+
+  system(*cmd)
+end
+
+desc "Generate api protobuf stubs"
+task :proto_api do
   API_PROTOCOL="./protocol/protobufs"
   API_OUT_RUBY="./lib/livekit/proto"
 
-  proto_files = Dir['./protocol/protobufs/*.proto']
+  proto_files = Dir["#{API_PROTOCOL}/*.proto"]
 
   cmd = [
     "protoc",
@@ -26,3 +52,5 @@ task :proto do
 
   system(*cmd)
 end
+
+task :proto => [:proto_api, :proto_ffi]
