@@ -8,7 +8,7 @@ task default: %i[spec]
 desc "Generate ffi protocol stubs"
 task :proto_ffi do
   FFI_PROTOCOL="./client-sdk-rust/livekit-ffi/protocol"
-  FFI_OUT_RUBY="./lib/livekit/proto"
+  FFI_OUT_RUBY="./lib/livekit/proto/rtc"
 
   proto_files = %w{
     audio_frame
@@ -25,8 +25,8 @@ task :proto_ffi do
   cmd = [
     "protoc",
     "--proto_path=#{FFI_PROTOCOL}",
-    "--ruby_out=#{API_OUT_RUBY}",
-    "--twirp_ruby_out=#{API_OUT_RUBY}",
+    "--ruby_out=#{FFI_OUT_RUBY}",
+    "--twirp_ruby_out=#{FFI_OUT_RUBY}",
     "-Iprotocol",
     *proto_files
   ]
@@ -37,7 +37,7 @@ end
 desc "Generate api protobuf stubs"
 task :proto_api do
   API_PROTOCOL="./protocol/protobufs"
-  API_OUT_RUBY="./lib/livekit/proto"
+  API_OUT_RUBY="./lib/livekit/proto/api"
 
   proto_files = Dir["#{API_PROTOCOL}/*.proto"]
 

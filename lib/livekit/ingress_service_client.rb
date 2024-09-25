@@ -1,4 +1,4 @@
-require "livekit/proto/livekit_ingress_twirp"
+require.+livekit/proto/api/livekit_ingress_twirp"
 require "livekit/auth_mixin"
 require 'livekit/utils'
 
