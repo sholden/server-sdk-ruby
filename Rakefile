@@ -7,17 +7,22 @@ task default: %i[spec]
 
 desc "Generate protobuf stubs"
 task :proto do
-  system("protoc",
-         "--proto_path=protocol/protobufs",
-         "--ruby_out=lib/livekit/proto",
-         "--twirp_ruby_out=lib/livekit/proto",
-         "-Iprotocol",
-         "./protocol/protobufs/livekit_agent.proto",
-         "./protocol/protobufs/livekit_agent_dispatch.proto",
-         "./protocol/protobufs/livekit_egress.proto",
-         "./protocol/protobufs/livekit_ingress.proto",
-         "./protocol/protobufs/livekit_sip.proto",
-         "./protocol/protobufs/livekit_models.proto",
-         "./protocol/protobufs/livekit_room.proto",
-         "./protocol/protobufs/livekit_webhook.proto")
+
+  #protoc --proto_path=./protocol/protobufs --ruby_out=. --twirp_ruby_out=. ./protocol/protobufs/livekit_agent.proto
+
+  API_PROTOCOL="./protocol/protobufs"
+  API_OUT_RUBY="./lib/livekit/proto"
+
+  proto_files = Dir['./protocol/protobufs/*.proto']
+
+  cmd = [
+    "protoc",
+    "--proto_path=#{API_PROTOCOL}",
+    "--ruby_out=#{API_OUT_RUBY}",
+    "--twirp_ruby_out=#{API_OUT_RUBY}",
+    "-Iprotocol",
+    *proto_files
+  ]
+
+  system(*cmd)
 end

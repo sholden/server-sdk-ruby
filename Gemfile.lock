@@ -65,6 +65,7 @@ DEPENDENCIES
   pry-doc
   rake
   rspec
+  twirp
   yard
 
 BUNDLED WITH
